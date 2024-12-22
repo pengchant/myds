@@ -165,3 +165,36 @@ int match(char exp[], int n) {
 }
 
 
+void trans(int d, char b[]) {
+    SqStack st;
+    initStack(st);
+    char ch;
+    int i = 0;
+    // 辗转相除法，余数入栈
+    while (d != 0) {
+        ch = '0' + d % 2;
+        push(st, ch);
+        d = d >> 1;
+    }
+    // 依次从栈中弹出值
+    while (!stackEmpty(st)) {
+        pop(st, ch);
+        b[i] = ch;
+        i++;
+    }
+    b[i] = '\0'; // \0代表最终的结尾
+    destroyStack(st);
+} 
+
+
+void runTrans() {
+    int d;
+    char str[MAX_SIZE];
+    do {
+        printf("输入一个正整数:");
+        scanf("%d", &d);
+    } while( d < 0);
+    trans(d, str);
+    printf("对应的二进制数: %s\n", str);
+
+}
