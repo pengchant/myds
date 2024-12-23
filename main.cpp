@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp03/seq/sequeapp.cpp"
+#include "chp04/str.cpp"
 
 int main() {
-    runQueueApp();
+    runStr();
     
     return 0;
 }
