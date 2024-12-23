@@ -1,4 +1,9 @@
 .vscode
+.idea
 
 output
 main.dSYM
+build
+main
+main.exe
+

@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "chp03/seq/seque3.cpp"
+#include "chp03/seq/sequeapp.cpp"
 
 int main() {
-    runQueue();
-
+    runQueueApp();
+    
     return 0;
 }
 
