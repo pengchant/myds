@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp04/str.cpp"
+#include "chp04/strl.cpp"
 
 int main() {
-    runStr();
+    testRun();
     
     return 0;
 }
