@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp04/strl.cpp"
+#include "chp05/matrix.cpp"
 
 int main() {
-    testRun();
+    runMatrix();
     
     return 0;
 }
