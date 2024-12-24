@@ -310,9 +310,76 @@ void testRun() {
     destroyStr(s6);
 }
 
+// repl 把一个串s中的最先出现的子串"ab"改为"xyz
+void repl(LinkString *&s) {
+    LinkString *p = s->next;
+    while (p->next != NULL) {
+        if (p->data == 'a' && p->next->data == 'b') {
+            p->data = 'x';
+            p->next->data = 'z';
+            LinkString *q = (LinkString *) malloc(sizeof(LinkString));
+            q->data = 'y';
+            q->next = p->next;
+            p->next = q;
+            break;
+        }
+        p = p->next;
+    }
+}
+
+LinkString * findCommonNode(LinkString *str1, LinkString *str2) {
+    int m = strLength(str1);
+    int n = strLength(str2);
+    LinkString *p = str1;
+    LinkString *q = str2;
+    for (; m > n; m--) {
+        p = p->next;
+    }
+    for (; n > m; n--) {
+        q = q->next;
+    }
+    while (p->next != NULL && p->next != q->next) {
+        p = p->next;
+        q = q->next;
+    }
+    return p->next;
+}
 
 
+typedef struct {
+    char ch;
+    int num;
+} Mytype;
 
 
+// statchar 求字符串s中包含不同字符的总数和每种字符的个数
+void statchar(LinkString *s, Mytype t[], int &n) {
+    n = 0;
+    LinkString *p = s->next;
+    while (p != NULL) {
+        if (n == 0) { // 如果是第一个元素直接添加
+            t[n].ch = p->data;
+            t[n].num = 1;
+            n++;
+        } else {
+            // 从t数组中查询是否有和p->data相同的值
+            int i = 0;
+            while (i < n && t[i].ch != p->data) {
+                i++;
+            }
+            if (i < n) {
+                // 如果找到，累加计数
+                t[i].num++;
+            } else {
+                // 没有找到,则为新字符
+                t[n].ch = p->data;
+                t[n].num = 1;
+                n++;
+            }
+        }
+        // p指针依次顺移
+        p = p->next;
+    }
+}
 
 

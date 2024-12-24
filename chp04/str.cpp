@@ -249,3 +249,39 @@ int count(SqString s, SqString t) {
     }
     return cnt;
 }
+
+// 求字符串是否包含等值子串,如果存在返回最大的等值子串
+int eqSubString(SqString s, SqString &t) {
+    int i = 0;
+    int j = 0;
+    int counti = 0;// 记录从当前位置i开始的等值子串的字符个数
+    int maxi = i; // 记录最大子串开始位置
+    int maxcount = 0; // 记录最大子串字符个数
+    while (i < s.length) {
+        j = i + 1;
+        counti = 1;
+        while (j < s.length && s.data[i] == s.data[j]) {
+            j++;
+            counti++;
+        }
+        // 更新最大等值子串maxi 和 最大子串长度
+        if (maxcount < counti) {
+            maxi = i;
+            maxcount = counti;
+        }
+        i = j;
+    }
+    if (maxcount <= 1) {
+        return 0;
+    }
+    int k = 0;
+    for (i = maxi; i < maxi + maxcount; i++) {
+        t.data[k] = s.data[i];
+        k++;
+    }
+    t.length = k;
+    return 1;
+}
+
+
+
