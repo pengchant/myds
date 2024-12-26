@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp05/matrix.cpp"
+#include "chp06/btree.cpp"
 
 int main() {
-    runMatrix();
+    runBTree();
     
     return 0;
 }
