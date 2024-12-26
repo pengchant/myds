@@ -2,7 +2,7 @@
 #include "chp06/btree.cpp"
 
 int main() {
-    runBTreeTraverse();
+    runAncestor();
     
     return 0;
 }
