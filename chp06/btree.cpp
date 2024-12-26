@@ -129,6 +129,61 @@ void dispBTree(BTNode *bt) {
     printf(")");
 }
 
+// preOrder 先序遍历
+void preOrder(BTNode *bt) {
+    if (bt == NULL) {
+        return;
+    }
+    printf("%c ", bt->data);
+    preOrder(bt->lchild);
+    preOrder(bt->rchild);
+}
+
+// inOrder 中序遍历
+void inOrder(BTNode *bt) {
+    if (bt == NULL) {
+        return;
+    }
+    inOrder(bt->lchild);
+    printf("%c ", bt->data);
+    inOrder(bt->rchild);
+}
+
+// postOrder 后续遍历
+void postOrder(BTNode *bt) {
+    if (bt == NULL) {
+        return;
+    }
+    postOrder(bt->lchild);
+    postOrder(bt->rchild);
+    printf("%c ", bt->data);
+}
+
+void levelOrder(BTNode *bt) {
+    BTNode *p;
+    BTNode *qu[MAX_SIZE]; // 模拟队列
+    int front = 0, rear = 0; // 队列的队首，队尾指针
+    rear++;
+    qu[rear] = bt;
+    while (front != rear) {
+        // 队首元素出队列并打印
+        front = (front + 1) % MAX_SIZE;
+        p = qu[front];
+        printf("%c ", p->data);
+
+        // 判断左右子结点
+        if (p->lchild != NULL) {
+            rear = (rear + 1) % MAX_SIZE;
+            qu[rear] = p->lchild; // 左子结点入队列
+        }
+        if (p->rchild != NULL) {
+            rear = (rear + 1) % MAX_SIZE;
+            qu[rear] = p->rchild; // 右子结点入队列
+        }
+        
+    }
+}
+
 
 void runBTree() {
     BTNode *bt;
@@ -139,5 +194,31 @@ void runBTree() {
     printf("二叉树的高度: %d\n", btHeight(bt));
     printf("二叉树的结点数: %d\n", nodeCount(bt));
     printf("二叉树的子结点数: %d\n", leafCount(bt));
+    destroyBTree(bt);
+}
+
+void runBTreeTraverse() {
+    BTNode *bt;
+    createBTree(bt, "A(B(D,E(G,H)),C(,F(I)))");
+    printf("二叉树bt:");
+    dispBTree(bt);
+    printf("\n");
+
+    printf("先序遍历序列:");
+    preOrder(bt);
+    printf("\n");
+
+    printf("中序遍历序列:");
+    inOrder(bt);
+    printf("\n");
+
+    printf("后序遍历序列:");
+    postOrder(bt);
+    printf("\n");
+
+    printf("层序遍历序列:");
+    levelOrder(bt);
+    printf("\n");
+
     destroyBTree(bt);
 }
