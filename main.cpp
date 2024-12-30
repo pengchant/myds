@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp06/btree.cpp"
+#include "chp06/threadBTree.cpp"
 
 int main() {
-    runBTreeTraverse();
+    runBth();
     
     return 0;
 }
