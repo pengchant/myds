@@ -5,6 +5,8 @@
 
 typedef int ElemType;
 
+typedef ElemType SqBinTree[MAX_SIZE];
+
 typedef struct node {
     ElemType data;
     struct node *lchild, *rchild;
@@ -184,6 +186,134 @@ void levelOrder(BTNode *bt) {
     }
 }
 
+// onenodes1 求二叉树中单分支结点个数
+int onenodes1(BTNode *bt) {
+    if (bt == NULL) {
+        return 0;
+    }
+    int m = onenodes1(bt->lchild);
+    int n = onenodes1(bt->rchild);
+    if (bt->lchild == NULL && bt->rchild != NULL ||
+        bt->rchild == NULL && bt->lchild != NULL)  {
+        return 1+m+n;
+    }
+    return 0;
+}
+
+// twonodes 求二叉树中双分支结点个数
+int twonodes(BTNode *bt) {
+    if (bt == NULL) {
+        return 0;
+    }
+    if (bt->lchild != NULL && bt->rchild != NULL) {
+        return 1 + twonodes(bt->lchild) + twonodes(bt->rchild);
+    }
+    return twonodes(bt->lchild) + twonodes(bt->rchild);
+}
+
+// copyBTree 拷贝二叉树
+void copyBTree(BTNode *bt, BTNode *&nt) {
+    if (bt == NULL) {
+        nt = NULL;
+        return;
+    }
+    nt = (BTNode *) malloc(sizeof(BTNode)); // 复制根结点
+    nt->data = bt->data; 
+    copyBTree(bt->lchild, nt->lchild); // 递归复制左子树
+    copyBTree(bt->rchild, nt->rchild); // 递归复制右子树
+}
+
+
+// trans1 给定二叉树链存储结构转化为顺序存储结构
+void trans1(BTNode *bt, SqBinTree &sb, int i) {
+    if (bt == NULL) {
+        sb[i] = '#';
+        return;
+    }
+    sb[i] = bt->data;
+    trans1(bt->lchild, sb, 2*i);
+    trans1(bt->rchild, sb, 2*i+1);
+    return;
+}
+
+// trans2 给定二叉树的顺序存储结构建其对应的二叉链存储结构
+void trans2(BTNode *&bt, SqBinTree sb, int i) {
+    if (i >= MAX_SIZE || sb[i] == '#') {
+        bt = NULL;
+        return;
+    }
+    bt = (BTNode *) malloc(sizeof(BTNode));
+    bt->data = sb[i];
+    trans2(bt->lchild, sb, 2*i);
+    trans2(bt->rchild, sb, 2*i+1);
+    return;
+}
+
+// ancestor1 输出每个叶子结点的所有祖先结点
+void ancestor1(BTNode *bt, ElemType path[], int pathlen) {
+    if (bt == NULL) {
+        return;
+    }
+    // bt 为叶子结点
+    if (bt->lchild == NULL && bt->rchild == NULL) {
+        printf("    %c 结点的所有祖先结点:", bt->data);
+        for(int i = pathlen - 1; i >= 0; i--) {
+            printf("%c ", path[i]);
+        }
+        printf("\n");
+    } else {
+        // bt 为非叶子结点，存入path中
+        path[pathlen] = bt->data;
+        pathlen++;
+        ancestor1(bt->lchild, path, pathlen);
+        ancestor1(bt->rchild, path, pathlen);
+    }
+}
+
+
+// ancestor2 采用层次遍历方法求解
+void ancestor2(BTNode *bt) {
+    struct {
+        BTNode *s;
+        int parent; // 存放其双亲结点的下标
+    } qu[MAX_SIZE];
+    int front = -1; // 队头指针
+    int rear = -1; // 队尾指针
+
+    rear++;
+    qu[rear].s = bt;
+    qu[rear].parent = -1; // 根结点无双亲
+
+    BTNode *p;
+    while (front != rear) {
+        front++;
+        p = qu[front].s;
+        // 当前结点为叶子结点，直接输出值
+        if (p->lchild == NULL && p->rchild == NULL) {
+            printf("    %c 结点的所有祖先结点:", p->data);
+            int i = qu[front].parent;
+            while (i != -1) {
+                printf("%c ", qu[i].s->data);
+                i = qu[i].parent;
+            }
+            printf("\n");
+        }
+        // 左子结点不为空，入队列
+        if (p->lchild != NULL) {
+            rear++;
+            qu[rear].s = p->lchild;
+            qu[rear].parent = front;
+        }
+        // 右子结点不为空，入队列
+        if (p->rchild != NULL) {
+            rear++;
+            qu[rear].s = p->rchild;
+            qu[rear].parent = front;
+        }
+    }
+
+}
+
 
 void runBTree() {
     BTNode *bt;
@@ -219,6 +349,26 @@ void runBTreeTraverse() {
     printf("层序遍历序列:");
     levelOrder(bt);
     printf("\n");
+
+    destroyBTree(bt);
+}
+
+
+void runAncestor() {
+    BTNode *bt;
+    ElemType path[MAX_SIZE];
+    createBTree(bt, "A(B(D,E(G,H)),C(,F(K)))");
+    printf("bt括号表示方法:");
+    dispBTree(bt);
+    printf("\n");
+
+    printf("解法1:\n");
+    printf("输出每个叶子结点的所有祖先结点:\n");
+    ancestor1(bt, path, 0);
+
+    printf("解法2:\n");
+    printf("输出每个叶子结点的所有祖先结点:\n");
+    ancestor2(bt);
 
     destroyBTree(bt);
 }
