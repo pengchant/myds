@@ -86,21 +86,25 @@ void thread(BthNode *&p) {
     if (p == NULL) {
         return;
     }
-    thread(p->lchild);
+    thread(p->lchild); // 前驱线索
+
     if (p->lchild == NULL) {
         p->lchild = pre;
         p->ltag = 1; // 标记为线索
     } else {
         p->ltag = 0; // 标记为左孩子
     }
+
     if (pre->rchild == NULL) {
         pre->rchild = p;
         pre->rtag = 1; // 标记为线索
     } else {
         pre->rtag = 0; // 标记为右孩子节点
     }
+
     pre = p; // 缓存前驱节点
-    thread(p->rchild);
+
+    thread(p->rchild); // 右子树线索化
 }
 
 
@@ -110,16 +114,16 @@ BthNode *creatThread(BthNode *bt) {
     // bt为空树
     if (bt == NULL) {
         head->ltag = 0;
-        head->lchild = head;
         head->rtag = 1;
+        head->lchild = head;
         head->rchild =NULL;
         return head;
     }
 
     // bt 不为空树
     head->ltag = 0;
-    head->lchild = bt;
     head->rtag = 1;
+    head->lchild = bt;
     head->rchild = bt;
 
     // 缓存前驱节点
@@ -132,7 +136,6 @@ BthNode *creatThread(BthNode *bt) {
     pre->rtag = 1;
 
     head->rchild = pre; // head的右子节点只想最后一个结点，标记为线索
-    head->rtag = 1;
 
     return head; // 最终返回头结点
 }
@@ -172,10 +175,10 @@ BthNode *lastNode(BthNode *tb) {
 // 1) p->ltag 直接是前驱线索标记，直接返回p->lchild;
 // 2) p->ltag 不是前驱线索标记，那么就需要找pre前驱结点的最右下的结点(结合中序遍历的结构特点考虑)
 BthNode *preNode(BthNode *p) {
-    BthNode *pre = p->lchild;
-    if (pre->ltag == 1) {
-        return pre;
+    if (p->ltag == 1) {
+        return p->lchild;
     }
+    BthNode *pre = p->lchild; 
     while (pre->rtag == 0) {
         pre = pre->rchild;
     }
@@ -186,11 +189,11 @@ BthNode *preNode(BthNode *p) {
 // 1) p->rtag == 1 直接返回后继结点;
 // 2) 找p的右子树的最左下角的结点
 BthNode *postNode(BthNode *p) {
-    BthNode *post = p->rchild;
     if (p->rtag == 1) {
-        return post;
+        return p->rchild;
     }
-    while (post->lchild == 0) {
+    BthNode *post = p->rchild;
+    while (post->ltag == 0) {
         post = post->lchild;
     }
     return post;
