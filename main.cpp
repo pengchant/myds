@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include "chp06/threadBTree.cpp"
+#include "chp07/adjgraph.cpp"
 
 int main() {
-    runBth();
-    
+    runAdjGraph();
     return 0;
 }
 
