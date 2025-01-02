@@ -2,7 +2,7 @@
 #include "chp07/adjgraph.cpp"
 
 int main() {
-    testFindAllPath();
+    testShortPath();
     return 0;
 }
 

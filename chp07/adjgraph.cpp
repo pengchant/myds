@@ -492,3 +492,72 @@ void testFindAllPath() {
     destroyGraph(G);
 }
 
+// shortPath 找u->v的最短路径
+void shortPath(AdjGraph *G, int u, int v) {
+    struct Queue {
+        int data;   // 顶点编号
+        int parent; // 前一个顶点编号
+    } qu[MAXVEX];
+    int front = -1;
+    int rear = -1;
+
+    // 访问标记设置为0
+    for (int i = 0; i < G->n; i++) {
+        visited[i] = 0;
+    }
+
+    rear++;
+    qu[rear].data = u;
+    qu[rear].parent = -1;
+    visited[u] = 1;
+
+    // 按照广度优先遍历算法
+    int w;
+    int i;
+    ArcNode *p;
+    while (front != rear) {
+        // 出队列
+        front++;
+        w = qu[front].data;
+        if (w == v) {
+            // 找到则逆序输出路径
+            i = front;
+            while (qu[i].parent != -1) {
+                printf("%d ", qu[i].data);
+                i = qu[i].parent;
+            }
+            printf("%d\n", qu[i].data);
+            break;
+        }
+        // 如果没有找到继续
+        p = G->adjlist[w].firstarc;
+        while (p != NULL) {
+            if (visited[p->adjvex] == 0) {
+                // 加入到队列，并标记为已访问
+                visited[p->adjvex] = 1;
+                rear++;
+                qu[rear].data = p->adjvex;
+                qu[rear].parent = front;
+            }
+            p = p->nextarc; // 找w的下一个相邻点
+        }
+    }
+}
+
+void testShortPath() {
+    int n = 5, e = 6;
+    int u = 0, v = 4;
+    int A[MAXVEX][MAXVEX] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+    AdjGraph *G;
+    createGraph(G, A, n, e);
+
+    printf("从顶点%d到%d的最短逆路径:", u, v);
+    shortPath(G, u, v);
+    destroyGraph(G);
+}
