@@ -417,5 +417,78 @@ void testHasAPath() {
     destroyGraph(G);
 }
 
+// findAPath 求u到v的一条简单的路径
+void findAPath(AdjGraph *G, int u, int v, int path[], int d) {
+    visited[u] = 1;
+    d++;
+    path[d] = u;
+    if (u == v) {
+        for (int i = 0; i <=d; i++) {
+            printf("%d ", path[i]);
+        }
+        return;
+    }
+    ArcNode *p = G->adjlist[u].firstarc;
+    int w;
+    while (p != NULL) {
+        w = p->adjvex;
+        if (visited[w] == 0) {
+            findAPath(G, w, v, path, d);
+        }
+        p = p->nextarc;
+    }
+}
 
+// findAllPath 求从u->v的所有的简单路径
+void findAllPath(AdjGraph *G, int u, int v, int path[], int d) {
+    visited[u] = 1;
+    d++;
+    path[d] = u;
+
+    // 如果找到顶点v
+    if (u == v) {
+        for (int i = 0;i <= d; i++) {
+            printf(" %d", path[i]);
+        }
+        printf("\n");
+        visited[v] = 0; // 从终点回溯
+    } else {
+        ArcNode *p = G->adjlist[u].firstarc;
+        int w;
+        while (p != NULL) {
+            w = p->adjvex;
+            if (visited[w] == 0) {
+                findAllPath(G, w, v, path, d);
+            }
+            p = p->nextarc;
+        }
+        visited[u] = 0; // 从顶点u开始回溯
+    }
+}
+
+void testFindAllPath() {
+    int n = 5;
+    int e = 5;
+    for (int i = 0;i < n; i++) {
+        visited[i] = 0;
+    }
+
+    int A[MAXVEX][MAXVEX] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+    AdjGraph *G;
+    createGraph(G, A, n, e);
+
+    int u = 0;
+    int v = 4;
+    printf("从顶点%d到顶点%d的所有路径:\n", u, v);
+    int path[MAXVEX];
+    int d = -1;
+    findAllPath(G, u, v, path, d);
+    destroyGraph(G);
+}
 
