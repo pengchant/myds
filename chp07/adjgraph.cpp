@@ -307,3 +307,43 @@ void runFS() {
     destroyGraph(G);
 
 }
+
+
+// 7.8 判断G是否为连通图
+int connect(AdjGraph *G) {
+    // 初始化visited
+    for (int i = 0; i < G->n; i++) {
+        visited[i] = 0;
+    }
+    dfs(G, 0);
+    for (int i = 0; i < G->n; i++) {
+        if (visited[i] == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// testConnect 测试连通图
+void testConnect() {
+    int n = 5;
+    int e = 6;
+    int A[MAXVEX][MAXVEX] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+    AdjGraph *G;
+    createGraph(G, A, n, e);
+
+    if (connect(G)) {
+        printf("\n图G是连通图\n");
+    } else {
+        printf("\n图G不是连通图\n");
+    }
+    
+    destroyGraph(G);
+
+}
