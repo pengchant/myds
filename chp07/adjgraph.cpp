@@ -214,7 +214,7 @@ void adjToMat(AdjGraph *G, MatGraph &g) {
 
 // ------------- 图的遍历 --------------
 
-int visited[MAXVEX] = {0};
+int visited[MAXVEX];
 
 
 void dfs(AdjGraph *G, int v) {
@@ -231,4 +231,79 @@ void dfs(AdjGraph *G, int v) {
     }
 }
 
+// bfs 广度优先遍历算法
+void bfs(AdjGraph *G, int v) {
+    // 定义顶点访问标记
+    int visited[MAXVEX];
+    for (int i = 0; i < G->n; i++) {
+        visited[i] = 0;
+    }
+    printf("%d ", v);
+    visited[v] = 1;
 
+    // 定义一个队列
+    int Qu[MAXVEX];
+    int front = 0, rear = 0;
+    rear = (rear + 1) % MAXVEX;
+    Qu[rear] = v;
+
+    ArcNode *p;
+    int w;
+
+    // 只要队列中不为空
+    while (rear != front) {
+        // 取出队列头部结点
+        front = (front + 1) % MAXVEX;
+        w = Qu[front];
+        p = G->adjlist[w].firstarc;
+
+        // 开始遍历和当前p结点相邻的元素
+        while (p != NULL) {
+            if (visited[p->adjvex] == 0) {
+                // 访问该节点，并标记为已访问
+                printf("%d ", p->adjvex);
+                visited[p->adjvex] = 1;
+
+                // 加入到队列que中
+                rear = (rear + 1) % MAXVEX;
+                Qu[rear] = p->adjvex;
+            }
+            // 一直往后遍历其余相邻结点
+            p = p->nextarc;
+        }
+    }
+}
+
+
+void runFS() {
+    int n = 5;
+    int e = 6;
+    int A[MAXVEX][MAXVEX] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+    AdjGraph *G;
+    createGraph(G, A, n, e);
+    printf("邻接表 G:\n");
+    dispGraph(G);
+
+    // 初始化全局变量visited
+    for (int i = 0; i < G->n; i++) {
+        visited[i] = 0;
+    }
+
+    printf("各种遍历序列:\n");
+    printf("    DFS:");
+    dfs(G, 0);
+    printf("\n");
+
+    printf("    BFS:");
+    bfs(G, 0);
+    printf("\n");
+
+    destroyGraph(G);
+
+}

@@ -110,3 +110,44 @@ void dfs1(MatGraph g, int v) {
         }
     }
 }
+
+
+
+void bfs1(MatGraph g, int v) {
+    // 定义visited已访问列表数组
+    int visited[MAXVEX];
+    for (int i = 0; i < g.n; i++) {
+        visited[i] = 0;
+    }
+
+    // 定义一个循环队列
+    int Qu[MAXVEX];
+    int front = 0, rear = 0;
+
+    // 访问当前结点
+    printf("%d ", v);
+    visited[v] = 1;
+    rear = (rear + 1) % MAXVEX;
+    Qu[rear] = v;
+
+    // 队列不为空时循环
+    int w = 0;
+    int val = 0;
+    while (front != rear) {
+        // 队列中弹出首元素
+        front = (front + 1) % MAXVEX;
+        w = Qu[front];
+        for (int i = 0; i < g.n; i++) {
+            val = g.edges[w][i];
+            if (val != 0 && val != INF && visited[i] == 0) {
+                // 访问元素并标记
+                printf("%d ", i);
+                visited[i] = 1;
+
+                // 把当前结点加入队列
+                rear = (rear + 1) % MAXVEX;
+                Qu[rear] = i;
+            }
+        }
+    }
+}
