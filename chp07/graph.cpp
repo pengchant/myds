@@ -95,3 +95,18 @@ void runMatGraph() {
     }
     destroyGraph(g);
 }
+
+// -------------- 图的深度遍历算法 ------------
+int visited[MAXVEX] = {0};
+
+void dfs1(MatGraph g, int v) {
+    printf("%d ", v);
+    visited[v] = 1;
+    int val;
+    for (int w = 0; w < g.n; w++) {
+        val = g.edges[v][w];
+        if (val != 0 && val != INF && visited[w] == 0) {
+            dfs1(g, w);
+        }
+    }
+}

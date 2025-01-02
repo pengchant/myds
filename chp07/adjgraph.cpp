@@ -23,6 +23,22 @@ typedef struct {
 } AdjGraph;
 
 
+// ------------------- graph.cpp 数据结构 -----------------
+typedef char VertexType[10]; 
+
+typedef struct vertex {
+    int adjvex;
+    VertexType data;
+} VType;
+
+typedef struct graph {
+    int n, e; // n 为实际顶点数，e为实际边数
+    VType vex[MAXVEX];  // 顶点集合
+    int edges[MAXVEX][MAXVEX]; // 邻接矩阵
+} MatGraph;
+// ------------------- graph.cpp 数据结构 -----------------
+
+
 // createGraph 建立图的邻接表运算算法
 void createGraph(AdjGraph *&G, int A[][MAXVEX], int n, int e) {
     G = (AdjGraph *) malloc(sizeof(AdjGraph));
@@ -143,3 +159,76 @@ void runAdjGraph() {
 
     destroyGraph(G);
 }
+
+// matToAdj 将邻接矩阵g转换为邻接表G
+void matToAdj(MatGraph g, AdjGraph *&G) {
+    G = (AdjGraph *) malloc(sizeof(AdjGraph));
+    for (int i = 0; i < g.n; i++) {
+        G->adjlist[i].firstarc = NULL;
+    }
+    int w = 0;
+    ArcNode *p;
+    for (int i = 0; i < g.n; i++) {
+        for (int j = g.n - 1; j >=0; j--) {
+            w = g.edges[i][j];
+            if (w != 0 && w != INF) {
+                p = (ArcNode *) malloc(sizeof(ArcNode));
+                p->adjvex = j;
+                p->weight = w;
+                // 采用头插法
+                p->nextarc = G->adjlist[i].firstarc;
+                G->adjlist[i].firstarc = p;
+            }
+        }
+    }
+    G->n = g.n;
+    G->e = g.e;
+}
+
+// adjToMat 邻接表G转换为邻接矩阵
+void adjToMat(AdjGraph *G, MatGraph &g) {
+    // 矩阵初始化
+    for (int i = 0; i < G->n; i++) {
+        for (int j = 0; j < G->n; j++) {
+            if (i == j) {
+                g.edges[i][j] = 0;
+                continue;
+            }
+            g.edges[i][j] = INF;
+        }
+    }
+    // 赋值
+    ArcNode *p;
+    for (int i = 0; i < G->n; i++) {
+        p = G->adjlist[i].firstarc;
+        while (p != NULL) {
+            g.edges[i][p->adjvex] = p->weight;
+            p = p->nextarc;
+        }
+    }
+    // n,e 赋值
+    g.n = G->n;
+    g.e = G->e;
+}
+
+
+// ------------- 图的遍历 --------------
+
+int visited[MAXVEX] = {0};
+
+
+void dfs(AdjGraph *G, int v) {
+    printf("%d ", v);
+    visited[v] = 1;
+    ArcNode *p = G->adjlist[v].firstarc;
+    int w;
+    while (p != NULL) {
+        w = p->adjvex;
+        if (visited[w] == 0) {
+            dfs(G, w);
+        }
+        p = p->nextarc;
+    }
+}
+
+
