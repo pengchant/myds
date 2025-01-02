@@ -347,3 +347,75 @@ void testConnect() {
     destroyGraph(G);
 
 }
+
+// hasAPath 按照深度优先遍历算法的思路，寻找u->v是否存在一条路径
+int hasAPath(AdjGraph *G, int u, int v) {
+    visited[u] = 1; // 从u开始
+    ArcNode *p = G->adjlist[u].firstarc;
+    int w;
+    while (p != NULL) {
+        // 记录相邻结点的编号
+        w = p->adjvex;
+        if (w == v) {
+            return 1;
+        }
+        if (visited[w] == 0) {
+            if (hasAPath(G, w, v)) { // 使用递归的方式深度遍历
+                return 1;
+            }
+        }
+        p = p->nextarc;
+    }
+    return 0;
+}
+
+int hashAPath1(AdjGraph *G, int u, int v) {
+    if (u == v) {
+        return 1;
+    }
+    visited[u] = 1; // 标记当前已被访问过
+    ArcNode *p = G->adjlist[u].firstarc;
+    int w;
+    while (p != NULL) {
+        w = p->adjvex;
+        if (visited[w] == 0) {
+            if (hashAPath1(G, w, v)) {
+                return 1;
+            }
+        }
+        p = p->nextarc;
+    }
+    return 0;
+}
+
+
+void testHasAPath() {
+    int n = 5;
+    int e = 5;
+    for (int i = 0;i < n; i++) {
+        visited[i] = 0;
+    }
+
+    int A[MAXVEX][MAXVEX] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+    AdjGraph *G;
+    createGraph(G, A, n, e);
+
+    int u = 0;
+    int v = 4;
+    if (hashAPath1(G, u, v)) {
+        printf("顶点%d到顶点%d有简单路径\n", u, v);
+    } else {
+        printf("顶点%d到顶点%d没有简单路径\n", u, v);
+    }
+
+    destroyGraph(G);
+}
+
+
+

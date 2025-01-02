@@ -2,7 +2,7 @@
 #include "chp07/adjgraph.cpp"
 
 int main() {
-    testConnect();
+    testHasAPath();
     return 0;
 }
 
