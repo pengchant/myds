@@ -151,3 +151,36 @@ void bfs1(MatGraph g, int v) {
         }
     }
 }
+
+
+// prim 最小生成树算法
+void prim(MatGraph g, int v) {
+    int lowcost[MAXVEX]; // 建立数组lowcost
+    int closest[MAXVEX]; // 建立数组closest
+    for (int i = 0; i < g.n; i++) {
+        closest[i] = v; // v -> i
+        lowcost[i] = g.edges[v][i]; // v -> i 权值
+    }
+    int min = INF;
+    int k;
+    // 构造n-1条边
+    for (int i = 1; i < g.n; i++) {
+        // 从V-U 中选择距离U最近的点k
+        for (int j = 0; j < g.n; j++) {
+            if (lowcost[j] != 0 && lowcost[j] < min) {
+                k = j; // 记录下最短边的顶点(i -> j)
+                min = lowcost[j]; // min是权值
+            }
+        }
+        // 把最小边打印处理
+        printf("    边(%d , %d),权值为%d\n", closest[k], k, min);
+        lowcost[k] = 0; // 把顶点k加入到U集合
+        // 修正数组lowcost 和 closest, k -> j (j要在候选集合中) 的最短路径
+        for (int j = 0; j < g.n; j++) {
+            if (lowcost[j] != 0 && g.edges[k][j] < lowcost[j]) {
+                closest[j] = k; // K -> j
+                lowcost[j] = g.edges[k][j]; // k 到 j的最短路径
+            }
+        }
+    }
+}
