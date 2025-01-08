@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp07/adjgraph.cpp"
+#include "chp07/graph.cpp"
 
 int main() {
-    testShortPath();
+    testKruskal();
     return 0;
 }
 
