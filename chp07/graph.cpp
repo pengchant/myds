@@ -286,3 +286,106 @@ void testKruskal() {
     destroyGraph(g);
 }
 
+
+// -------------------- dijkstra 算法 ----------------------
+void dispAllPath(MatGraph g, int dist[], int path[], int S[], int v) {
+    int d; // 路径长度
+    int k; // 前一个结点编号
+    int apath[MAXVEX]; // 所有路径
+    for (int i = 0; i < g.n; i++) {
+        if (S[i] == 0 || i == v) {
+            continue;
+        }
+        printf("    从%d到%d最短路径长度为:%d\t路径:", v, i, dist[i]);
+        d = 0;
+        apath[d] = i;
+        k = path[i]; // 求当前结点 前一个 顶点 k
+        if (k == -1) {
+            printf("无路径\n");
+            continue;
+        }
+        while (k != v) {
+            d++; // 累加路径结点数
+            apath[d] = k; // apath数组中保存路径编号
+            k = path[k]; // 往前递推路径编号 
+        }
+        d++;
+        apath[d] = v;
+
+        // 逆向输出路径
+        printf("%d", apath[d]); // 先输出起点 
+        for (int j = d-1; j >= 0; j--) {
+            printf("->%d", apath[j]);
+        }
+        printf("\n");
+    }
+}
+
+void dijkstra(MatGraph g, int v) {
+    int dist[MAXVEX];
+    int path[MAXVEX];
+    int S[MAXVEX]; // 结果集合
+    // 初始化dist path 数组
+    for (int i = 0; i < g.n; i++) {
+        dist[i] = g.edges[v][i];
+        S[i] = 0;
+        if (g.edges[v][i] < INF) {
+            path[i] = v;
+        } else {
+            path[i] = -1;
+        }
+    }
+    // 开始算法过程
+    S[v] = 1; // 源点v放入S集合中
+    int mindis; // 保存最短路径局部变量
+    int u; // 保存路径最短的顶点编号
+    for (int i = 0; i < g.n - 1; i++) {
+        // 先从U中找距离最短的一个顶点
+        mindis = INF;
+        for (int j = 0; j < g.n; j++) {
+            if (S[j] == 0 && dist[j] < mindis) {
+                u = j;
+                mindis = dist[j];
+            }
+        }
+        // 将顶点放入S集合中
+        printf("将顶点%d加入S中\n", u);
+        S[u] = 1;
+        // 修改U集合中的距离，考虑从u->U集合中其余顶点的距离值
+        for (int j = 0; j < g.n; j++) {
+            if (S[j] == 0) {
+                if (g.edges[u][j] < INF && dist[u] + g.edges[u][j] < dist[j]) {
+                    dist[j] = dist[u] + g.edges[u][j];
+                    path[j] = u;
+                }
+            }
+        }
+    }
+    // 最后一步输出路径
+    dispAllPath(g, dist, path, S, v);
+}
+
+
+
+void runDijkstra() {
+    MatGraph g;
+    int n = 7;
+    int e = 12;
+    int A[MAXVEX][MAXVEX] = {
+        {0, 4, 6, 6, INF, INF, INF},
+        {INF, 0, 1, INF, 7, INF, INF},
+        {INF, INF, 0, INF, 6, 4, INF},
+        {INF, INF, 2, 0, INF, 5, INF},
+        {INF, INF, INF, 0, INF, 6},
+        {INF, INF, INF, INF, 1, 0, 8},
+        {INF, INF, INF, INF, INF ,INF, 0}
+    };
+    createGraph(g, A, n, e);
+
+    printf("图G的存储结构:\n");
+    dispGraph(g);
+
+    dijkstra(g, 0);
+
+    destroyGraph(g);
+}
