@@ -473,3 +473,61 @@ void runFloyd() {
     floyd(g);
     destroyGraph(g);
 }
+
+// --------------------- floyd 算法应用 ---------------------
+
+void floyd1(MatGraph g, int A[][MAXVEX]) {
+    // 初始化A数组
+    for (int i = 0; i < g.n; i++) {
+        for (int j = 0; j < g.n; j++) {
+            A[i][j] = g.edges[i][j];
+        }
+    }
+    // 动态规划
+    for (int k = 0; k < g.n; k++) {
+        for (int i = 0; i < g.n; i++) {
+            for (int j = 0; j < g.n; j++) {
+                if (A[i][j] > A[i][k] + A[k][j]) {
+                    A[i][j] = A[i][k] + A[k][j]; // 修改路径长度
+                }
+            }
+        }
+    }
+}
+
+// findVex 查找最佳村庄的编号
+int findVex(int A[][MAXVEX], int n) {
+    int B[MAXVEX];
+    for (int i = 0; i < n; i++) {
+        B[i] = 0;
+        for (int j = 0; j < n; j++) {
+            B[i] += A[i][j];
+        }
+    }
+    int minv = 0;
+    for (int i = 1; i < n; i++) {
+        if (B[i] < B[minv]) {
+            minv = i;
+        }
+    }
+    return minv;
+}
+
+void runFindVex() {
+    MatGraph g;
+    int A[MAXVEX][MAXVEX];
+    int n = 5;
+    int e = 6;
+    int B[MAXVEX][MAXVEX] = {
+        {0, 12, 9, INF, 3},
+        {12, 0, 6, INF, INF},
+        {9, 6, 0, 4, INF},
+        {INF, INF, 4, 0, 6},
+        {3, INF, INF, 6, 0}
+    };
+    createGraph(g, B, n, e); // 创建图
+    printf("图G的存储结构:\n");
+    dispGraph(g);
+    floyd1(g, A);
+    printf("最佳村庄编号:%d\n", findVex(A, n));
+}

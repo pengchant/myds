@@ -2,7 +2,7 @@
 #include "chp07/graph.cpp"
 
 int main() {
-    runFloyd();
+    runFindVex();
     return 0;
 }
 
