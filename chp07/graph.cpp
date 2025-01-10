@@ -389,3 +389,87 @@ void runDijkstra() {
 
     destroyGraph(g);
 }
+
+
+// ---------------- floyd 多源最短路径算法 ----------------
+
+// dispAllPath 输出最短路径
+void dispAllPath(MatGraph g, int A[][MAXVEX], int path[][MAXVEX]) {
+    int apath[MAXVEX];
+    for (int i = 0; i < g.n; i++) {
+        for (int j = 0; j < g.n; j++) {
+            if (i == j || A[i][j] == INF) {
+                continue;
+            }
+            printf("    顶点%d到顶点%d的最短路径长度:%d\t路径:", i, j, A[i][j]);
+            // 输出路径
+            int k = path[i][j]; // 追溯法
+            int d = 0; // 路径计数
+            apath[d] = j; // 终点j
+            while (k != -1 && k != i) {
+                d++;
+                apath[d] = k;
+                k = path[i][k];
+            }
+            d++; // 起始结点
+            apath[d] = i; // 起始结点
+            printf("%d", apath[d]); // 输出起点
+            // 逆序输出
+            for (int s = d-1; s >= 0; s--) {
+                printf("->%d", apath[s]);
+            }
+            printf("\n");
+        }
+    }
+}
+
+void floyd(MatGraph g) {
+    int A[MAXVEX][MAXVEX];
+    int path[MAXVEX][MAXVEX]; 
+    // 初始化path数组
+    for (int i = 0; i < g.n; i++) {
+        for (int j = 0; j < g.n; j++) {
+            A[i][j] = g.edges[i][j];
+            if (i != j && g.edges[i][j] < INF) {
+                path[i][j] = i; // i -> j 前一个顶点i
+            } else {
+                path[i][j] = -1; // 无边
+            }
+        }
+    }
+    // 求Ak
+    for (int k = 0; k < g.n; k++) {
+        for (int i = 0; i < g.n; i++) {
+            for (int j = 0; j < g.n; j++) {
+                // 找到更短的路径
+                if (A[i][j] > A[i][k] + A[k][j]) {
+                    A[i][j] = A[i][k] + A[k][j];
+                    path[i][j] = path[k][j]; // 最短路径改为经过点k
+                }
+            }
+        }
+    }
+    // 输出路径
+    dispAllPath(g, A, path);
+}
+
+void runFloyd() {
+    MatGraph g;
+    int n = 6;
+    int e = 11;
+    int v = 2;
+    int A[][MAXVEX] = {
+        {0, 50, 10, INF, INF, INF},
+        {INF, 0, 15, 50, 10, INF},
+        {20, INF, 0, 15, INF, INF},
+        {INF, 20, INF, 0, 35, INF},
+        {INF, INF, INF, 30, 0, INF},
+        {INF, INF, INF, 3, INF, 0},
+    };
+    createGraph(g, A, n, e); // 创建图
+    printf("Dijkstra求解结果如下:\n");
+    dijkstra(g, v);
+    printf("\nFloyd求解结果如下:\n");
+    floyd(g);
+    destroyGraph(g);
+}
