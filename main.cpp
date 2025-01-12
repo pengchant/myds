@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp07/graph.cpp"
+#include "chp08/idx_search.cpp"
 
 int main() {
-    runFindVex();
+    runIdxSearch();
     return 0;
 }
 
