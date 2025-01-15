@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "chp08/idx_search.cpp"
+#include "chp08/bst_search.cpp"
 
 int main() {
-    runIdxSearch();
+    runBST();
+    
     return 0;
 }
 
