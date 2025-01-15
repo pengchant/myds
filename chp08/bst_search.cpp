@@ -65,6 +65,7 @@ void createBST(BSTNode *&bt, KeyType a[], int n) {
     }
 }
 
+// destroyBST 销毁BST
 void destroyBST(BSTNode *&bt) {
     if (bt == NULL) {
         return;
@@ -72,4 +73,21 @@ void destroyBST(BSTNode *&bt) {
     destroyBST(bt->lchild);
     destroyBST(bt->rchild);
     free(bt);
+}
+
+// dispBST 把二叉排序树按照括号表示法输出
+void dispBST(BSTNode *bt) {
+    if (bt == NULL) {
+        return;
+    }
+    printf("%d", bt->key);
+    if (bt->lchild != NULL || bt->rchild != NULL) {
+        printf("(");
+        dispBST(bt->lchild);
+        if (bt->rchild != NULL) {
+            printf(",");
+        }
+        dispBST(bt->rchild);
+        printf(")");
+    }
 }
