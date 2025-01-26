@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp08/bst_search.cpp"
+#include "chp09/swap_sort.cpp"
 
 int main() {
-    runBST();
+    testQuickSort();
     
     return 0;
 }

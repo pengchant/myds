@@ -33,7 +33,59 @@ void bubbleSort(SqType R[], int n) {
     }
 }
 
+// quickSort 快速排序算法
+void quickSort(SqType R[], int s, int t) {
+    int i = s;
+    int j = t;
+    SqType tmp;
+    // 判断s、t的关系
+    if (s >= t) {
+        return;
+    }
+    tmp = R[s];
+    while (i != j) {
+        // 从后往前寻找比tmp小的元素
+        while (j > i && R[j].key >= tmp.key) {
+            j--;
+        }
+        // 将R[j]移动到R[i]的位置
+        if (i < j) {
+            R[i] = R[j];
+            i++;
+        }
+        // 从前往后寻找比tmp大的元素
+        while ( i < j && R[i].key <= tmp.key) {
+            i++;
+        }
+        // 将R[i]移动到R[j]的位置
+        if (i < j) {
+            R[j] = R[i];
+            j--;
+        }
+    }
+    // 把最终的tmp值赋值到最终位置
+    R[i] = tmp;
+    // 递归算法分别对左右子序列
+    quickSort(R, s, i-1);
+    quickSort(R, i+1, t);
+}
+
 void runBubbleSort() {
+    SqType R[MAX_SIZE];
+    KeyType A[] = {75, 87, 68, 92, 88, 61, 77, 96, 80, 72};
+    int n = 10;
+    for (int i = 0; i < n; i++) {
+        R[i].key = A[i];
+    }
+    bubbleSort(R, n);
+    printf("排序结果：");
+    for (int i = 0; i < n; i++) {
+        printf("%3d", R[i].key);
+    }
+    printf("\n");
+}
+
+void testQuickSort() {
     SqType R[MAX_SIZE];
     KeyType A[] = {75, 87, 68, 92, 88, 61, 77, 96, 80, 72};
     int n = 10;
