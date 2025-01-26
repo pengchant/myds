@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp09/swap_sort.cpp"
+#include "chp09/select_sort.cpp"
 
 int main() {
-    testQuickSort();
+    testSelectSort();
     
     return 0;
 }
