@@ -2,7 +2,7 @@
 #include "chp09/select_sort.cpp"
 
 int main() {
-    testSelectSort();
+    testHeapSort();
     
     return 0;
 }
