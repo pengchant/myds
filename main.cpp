@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp09/select_sort.cpp"
+#include "chp09/merge_sort.cpp"
 
 int main() {
-    testHeapSort();
+    testMergeSort();
     
     return 0;
 }
