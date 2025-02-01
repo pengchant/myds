@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "chp09/merge_sort.cpp"
+#include "chp09/radix_sort.cpp"
 
 int main() {
-    testMergeSort();
+    testRadixSort();
     
     return 0;
 }
